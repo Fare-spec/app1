@@ -5,9 +5,9 @@ SRC_DIR = src
 OBJ_DIR = build
 BIN_DIR = bin
 
-EXEC = $(BIN_DIR)/client-tuto-fort
+EXEC = $(BIN_DIR)/client-projetX
 
-OBJS = $(OBJ_DIR)/client-tuto-fort.o \
+OBJS = $(OBJ_DIR)/client-projetX.o \
        $(OBJ_DIR)/client.o
 
 all: $(EXEC)
@@ -18,19 +18,19 @@ $(BIN_DIR) $(OBJ_DIR):
 $(EXEC): $(OBJS) | $(BIN_DIR)
 	$(CC) $(CFLAGS) $^ -o $@
 
-$(OBJ_DIR)/client-tuto-fort.o: $(SRC_DIR)/client-tuto-fort.c $(SRC_DIR)/client.h | $(OBJ_DIR)
+$(OBJ_DIR)/client-projetX.o: $(SRC_DIR)/client-projetX.c $(SRC_DIR)/client.h | $(OBJ_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(OBJ_DIR)/client.o: $(SRC_DIR)/client.c $(SRC_DIR)/client.h | $(OBJ_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 run: $(EXEC)
-	reset&&./$(EXEC)
+	reset && ./$(EXEC)
 
 clean:
-	rm -rf $(OBJ_DIR) && reset
+	rm -rf $(OBJ_DIR)
 
 clear: clean
-	rm -rf $(BIN_DIR) && reset
+	rm -rf $(BIN_DIR)
 
 .PHONY: all run clean clear
