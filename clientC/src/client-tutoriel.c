@@ -12,8 +12,10 @@ int main() {
   // Connexion au serveur AppoLab
   connexion("im2ag-appolab.u-ga.fr");
 
-  FILE *file = fopen("commands.txt", "r");
-  FILE *credentials = fopen(".env", "r");
+  // Need to put those two following files at the / of the project (APP1/./) and
+  // to execute from there as well ...
+  FILE *file = fopen("./commands.txt", "r");
+  FILE *credentials = fopen("./.env", "r");
 
   if (file == NULL || credentials == NULL) {
     printf("Couldn't open the file");

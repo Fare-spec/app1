@@ -17,7 +17,10 @@ typedef int32_t i32;
 typedef int64_t i64;
 
 typedef size_t usize;
-const char END[] = "Félicitations";
+const char END[] =
+    "Félicitations"; // I am not sure that is the right solution, as this could
+                     // be a test as well ? I do not have the index of those
+                     // test so I will assume that this is the good indicator
 
 int main() {
 
@@ -26,9 +29,10 @@ int main() {
 
   // Connexion au serveur AppoLab
   connexion("im2ag-appolab.u-ga.fr");
-
-  FILE *file = fopen("commandsFORT.txt", "r");
-  FILE *credentials = fopen(".env", "r");
+  // Need to put those two following files at the / of the project (APP1/./) and
+  // to execute from there as well ...
+  FILE *file = fopen("./commandsFORT.txt", "r");
+  FILE *credentials = fopen("./.env", "r");
 
   if (file == NULL || credentials == NULL) {
     printf("Couldn't open the file");
