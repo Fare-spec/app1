@@ -1,28 +1,24 @@
-# Si clang non trouvé, possible d'utiliser gcc
-CC=clang
-CFLAGS=-g -Wall -Wextra -Werror -gdwarf-4
+CC = clang
+CFLAGS = -g -Wall -Wextra -Werror -gdwarf-4
 
-EXEC=client-tutoriel client-interactif
-
-# Utilisé uniquement si exécution sur Caseine.
-# Pour changer le programme lancé par Caseine, modifiez la ligne ci-dessous
-MAIN=client-interactif
+BIN_DIR = bin
+EXEC = $(BIN_DIR)/client-tuto-fort
 
 all: $(EXEC)
 
-client-interactif: client-interactif.o client.o
+$(BIN_DIR):
+	mkdir -p $(BIN_DIR)
 
-client-tutoriel: client-tutoriel.o client.o
+$(EXEC): client-tuto-fort.o client.o | $(BIN_DIR)
+	$(CC) $(CFLAGS) $^ -o $@
 
+client-tuto-fort.o: client-tuto-fort.c client.h
 client.o: client.c client.h
 
 clean:
 	rm -f *.o
 
-clear:
-	rm -f $(EXEC)
+clear: clean
+	rm -rf $(BIN_DIR)
 
-main: $(MAIN)
-	cp $< $@
-
-.PHONY: clear clean main
+.PHONY: all clean clear

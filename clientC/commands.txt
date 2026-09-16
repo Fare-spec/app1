@@ -1,0 +1,7 @@
+load tutoriel
+start
+oui
+4
+blanc
+Pincemoi
+tutoriel
