@@ -1,31 +1,34 @@
 CC = clang
-CFLAGS = -g -Wall -Wextra -Werror -gdwarf-4
+CFLAGS = -g -Wall -Wextra -Werror -gdwarf-4 -Isrc
 
 SRC_DIR = src
 OBJ_DIR = build
 BIN_DIR = bin
 
-EXEC = $(BIN_DIR)/client-projetX
+# Tous les programmes client-*.c
+PROGRAM_SRCS = $(filter-out \
+	$(SRC_DIR)/client-crypteMove.c, \
+	$(wildcard $(SRC_DIR)/client-*.c))
 
-OBJS = $(OBJ_DIR)/client-projetX.o \
-       $(OBJ_DIR)/client.o
+# src/client-truc.c -> bin/client-truc
+PROGRAMS = $(patsubst $(SRC_DIR)/%.c,$(BIN_DIR)/%,$(PROGRAM_SRCS))
 
-all: $(EXEC)
+# Objets communs à tous les programmes
+COMMON_OBJS = $(OBJ_DIR)/client.o \
+	      $(OBJ_DIR)/client-crypteMove.o
+
+all: $(PROGRAMS)
 
 $(BIN_DIR) $(OBJ_DIR):
 	mkdir -p $@
 
-$(EXEC): $(OBJS) | $(BIN_DIR)
+# Chaque client-XXX.c devient un exécutable bin/client-XXX
+$(BIN_DIR)/%: $(OBJ_DIR)/%.o $(COMMON_OBJS) | $(BIN_DIR)
 	$(CC) $(CFLAGS) $^ -o $@
 
-$(OBJ_DIR)/client-projetX.o: $(SRC_DIR)/client-projetX.c $(SRC_DIR)/client.h | $(OBJ_DIR)
+# Compilation générique des .c vers build/*.o
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
-
-$(OBJ_DIR)/client.o: $(SRC_DIR)/client.c $(SRC_DIR)/client.h | $(OBJ_DIR)
-	$(CC) $(CFLAGS) -c $< -o $@
-
-run: $(EXEC)
-	reset && ./$(EXEC)
 
 clean:
 	rm -rf $(OBJ_DIR)
@@ -33,4 +36,4 @@ clean:
 clear: clean
 	rm -rf $(BIN_DIR)
 
-.PHONY: all run clean clear
+.PHONY: all clean clear

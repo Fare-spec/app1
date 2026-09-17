@@ -24,7 +24,7 @@ typedef struct {
 } Entry;
 
 // I find the idea interesting of finding the offset heuristicly even though we
-// could have used the fact that the first char is a c and find the whole offset
+// could have used the fact that the first char is a C and find the whole offset
 // using it.
 static const Entry table[26] = {
     {'a', 7.11f}, {'b', 1.14f}, {'c', 3.18f}, {'d', 3.67f}, {'e', 12.10f},
