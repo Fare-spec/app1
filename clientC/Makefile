@@ -19,14 +19,20 @@ COMMON_OBJS = $(OBJ_DIR)/client.o \
 
 all: $(PROGRAMS)
 
+# NorthWoods utilise les fonctions de cryptseq, sans son point d'entrée.
+$(BIN_DIR)/client-NorthWoods: $(OBJ_DIR)/client-cryptseq-lib.o
+
+$(BIN_DIR)/client-LostCause: $(OBJ_DIR)/client-cryptseq-lib.o
+
+$(OBJ_DIR)/client-cryptseq-lib.o: $(SRC_DIR)/client-cryptseq.c | $(OBJ_DIR)
+	$(CC) $(CFLAGS) -DCLIENT_CRYPTSEQ_LIBRARY -c $< -o $@
+
 $(BIN_DIR) $(OBJ_DIR):
 	mkdir -p $@
 
-# Chaque client-XXX.c devient un exécutable bin/client-XXX
 $(BIN_DIR)/%: $(OBJ_DIR)/%.o $(COMMON_OBJS) | $(BIN_DIR)
 	$(CC) $(CFLAGS) $^ -o $@
 
-# Compilation générique des .c vers build/*.o
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 

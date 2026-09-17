@@ -1,5 +1,6 @@
 #include "client-crypteMove.h"
 #include "client.h"
+#include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
@@ -40,10 +41,41 @@ void rotate_f(char *array, usize index) {
 
   array[len - 1] = elt;
 }
+
 void cryptseq_de(char *text, char *new_text) {
   char encounter[125] = "";
   usize enc_len = 0;
   usize len = strlen(text);
+
+  for (usize i = 0; i < len; i++) {
+    i8 contained = contains(encounter, text[i]);
+
+    if (contained == -1) {
+      encounter[enc_len] = text[i];
+      enc_len++;
+      encounter[enc_len] = '\0';
+
+      new_text[i] = text[i];
+
+    } else {
+      usize pos = (usize)contained;
+      usize next_pos;
+
+      if (pos == enc_len - 1) {
+        next_pos = 0;
+      } else {
+        next_pos = pos + 1;
+      }
+
+      char original = encounter[next_pos];
+
+      new_text[i] = original;
+
+      rotate_f(encounter, next_pos);
+    }
+  }
+
+  new_text[len] = '\0';
 }
 
 void cryptseq_en(char *text, char *new_text) {
@@ -63,7 +95,7 @@ void cryptseq_en(char *text, char *new_text) {
       usize pos = (usize)contained;
       if (pos == 0) {
 
-        new_text[i] = encounter[enc_len - 1]; // we avoid '\0'
+        new_text[i] = encounter[enc_len - 1];
 
       } else {
         new_text[i] = encounter[pos - 1];
@@ -78,6 +110,7 @@ void cryptseq_en(char *text, char *new_text) {
   new_text[len] = '\0';
 }
 
+#ifndef CLIENT_CRYPTSEQ_LIBRARY
 int main(void) {
 
   // Affiche les échanges avec le serveur (false pour désactiver)
@@ -111,7 +144,27 @@ int main(void) {
   printf("%s\n", ans);
   cryptseq_en(ans, ans2);
   printf("%s\n", ans2);
-  envoyer(ans2);
+
+  envoyer_recevoir(ans2, buffer);
+  char encd[] =
+      "Alice,\n"
+      "Sl tuiaraSvcsuusAruvaArrmcvevgmAcr'gmS,qS'tsqem'uiqtaulati,on rS "
+      "staAS,s\n"
+      "mvivqhScvdmmmmnoypi'ldmdldoguycumtoy.gCpaodleinod.nCaaas'ro Sojl,iousC "
+      "eubajlsSSinguovuicavnglbonbbSqlstfCshscssndn.Jt.gJucpJc'sspfqpeunroq "
+      "umqsmmbqfllsnvofrorrimeilr o-nc.citAumtmiqv-rms-afturnt'at\n"
+      "ub f "
+      "eegiiasod-itmjntuu-lnvmvv?c.e.ddnmbAuibtad.evddtjEulsv-vgSmfubvtbeIru?-"
+      "isl-lveJhettttaltpeIeeql Csluht-rthbeteiedlCld,Ieeegeai,I-crIc\n"
+      "Iethpcpp\n"
+      "'oosIdm\n"
+      "'eplqIRd'j'u'Afpbrnhppi'cRx'c,orxslNmxb,wNwmn "
+      "ue.AaiNSRNi.attmAlnlAnnnnvetJc,xSEquiabo\n"
+      "-edbpjbmn,yCwe,et,Egg,E,eggrd,,eiltggwaddajv\n"
+      "p\n"
+      "oe:twNvenh:rttiuEsmgvllhrpgdoi:wbBtq''";
+  cryptseq_de(encd, ans2);
+  printf("%s\n", ans2);
   printf("Fin d'envoi des messages.\n");
   printf("Pour envoyer d'autres lignes, ajouter des appels à la fonction "
          "`envoyer`\n");
@@ -119,3 +172,4 @@ int main(void) {
   printf("Fin de la connection au serveur\n");
   return 0;
 }
+#endif
