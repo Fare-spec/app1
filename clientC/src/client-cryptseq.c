@@ -18,6 +18,10 @@ typedef int64_t i64;
 typedef float f32;
 
 typedef size_t usize;
+typedef struct {
+  char key;
+  char value;
+} entry;
 
 i8 contains(char *array, char elt) {
   usize len = strlen(array);
@@ -40,6 +44,48 @@ void rotate_f(char *array, usize index) {
   }
 
   array[len - 1] = elt;
+}
+
+static void cryptassoc(char *text, char *result, bool decode) {
+  entry sequence[256];
+  usize count = 0;
+  usize i;
+
+  for (i = 0; text[i] != '\0'; i++) {
+    usize pos = 0;
+    while (pos < count &&
+           (decode ? sequence[pos].value : sequence[pos].key) != text[i]) {
+      pos++;
+    }
+
+    if (pos == count) {
+      sequence[count++] = (entry){text[i], text[i]};
+    } else {
+      if (decode) {
+        pos = (pos + 1) % count;
+      }
+      usize previous = (pos + count - 1) % count;
+      char association = sequence[pos].value;
+      sequence[pos].value = sequence[previous].value;
+      sequence[previous].value = association;
+    }
+
+    result[i] = decode ? sequence[pos].key : sequence[pos].value;
+    entry current = sequence[pos];
+    for (usize j = pos; j + 1 < count; j++) {
+      sequence[j] = sequence[j + 1];
+    }
+    sequence[count - 1] = current;
+  }
+  result[i] = '\0';
+}
+
+void cryptassoc_de(char *text, char *deciphered) {
+  cryptassoc(text, deciphered, true);
+}
+
+void cryptassoc_en(char *text, char *ciphered) {
+  cryptassoc(text, ciphered, false);
 }
 
 void cryptseq_de(char *text, char *new_text) {

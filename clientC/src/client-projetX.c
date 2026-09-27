@@ -1,3 +1,4 @@
+#include "client-projetX.h"
 #include "client.h"
 #include <stdbool.h>
 #include <stdint.h>
@@ -23,9 +24,6 @@ typedef struct {
   f32 value;
 } Entry;
 
-// I find the idea interesting of finding the offset heuristicly even though we
-// could have used the fact that the first char is a C and find the whole offset
-// using it.
 static const Entry table[26] = {
     {'a', 7.11f}, {'b', 1.14f}, {'c', 3.18f}, {'d', 3.67f}, {'e', 12.10f},
     {'f', 1.11f}, {'g', 1.23f}, {'h', 1.11f}, {'i', 6.59f}, {'j', 0.34f},
@@ -92,7 +90,7 @@ void create_offset(const char *text, u8 offset, char *new_text) {
 
 u8 find_offset(char *text) {
 
-  u8 best;
+  u8 best = 0;
   Entry letters_count[26];
 
   count_chars(text, letters_count);
@@ -108,6 +106,7 @@ u8 find_offset(char *text) {
   return best;
 }
 
+#ifndef CLIENT_PROJETX_LIBRARY
 int main() {
 
   // Affiche les échanges avec le serveur (false pour désactiver)
@@ -150,3 +149,4 @@ int main() {
   printf("Fin de la connection au serveur\n");
   return 0;
 }
+#endif

@@ -1,4 +1,3 @@
-#include "client-cryptseq.h"
 #include "client.h"
 #include <ctype.h>
 #include <stdbool.h>
@@ -15,7 +14,7 @@ int main() {
 
   // Need to put those two following files at the / of the project (APP1/./) and
   // to execute from there as well ...
-  FILE *file = fopen("./commands_LostCause.txt", "r");
+  FILE *file = fopen("./commands_brave.txt", "r");
   FILE *credentials = fopen("./.env", "r");
 
   if (file == NULL || credentials == NULL) {
@@ -24,19 +23,13 @@ int main() {
   }
 
   char buffer[256];
-  char answer[MAXREP];
-
-  char answer_de[MAXREP];
 
   while (fgets(buffer, sizeof(buffer), credentials)) {
     envoyer(buffer);
   }
   while (fgets(buffer, sizeof(buffer), file)) {
-    envoyer_recevoir(buffer, answer);
+    envoyer(buffer);
   }
-  cryptassoc_de(answer, answer_de);
-  printf("%s\n", answer_de);
-  envoyer("tout va bien");
 
   printf("Fin d'envoi des messages.\n");
   printf("Pour envoyer d'autres lignes, ajouter des appels à la fonction "
