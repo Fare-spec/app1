@@ -175,7 +175,7 @@ int main(void) {
     return 1;
   }
 
-  char buffer[256];
+  char buffer[MAXREP];
   char answer[MAXREP];
 
   while (fgets(buffer, sizeof(buffer), credentials)) {

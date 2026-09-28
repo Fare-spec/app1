@@ -20,7 +20,7 @@ typedef float f32;
 typedef size_t usize;
 void remove_elt(char *array, usize elt) {
   usize len = strlen(array);
-  if (elt > len) {
+  if (elt >= len) {
     return;
   }
 
